@@ -2,10 +2,13 @@ import { RecipeModel } from "./recipe.model";
 import {EventEmitter, Injectable} from "@angular/core";
 import {IngredientModel} from "../shared/ingredient.model";
 import {ShoppingListSerivce} from "../shopping-list/shopping-list.service";
+import {Subject} from "rxjs";
 
 
 @Injectable()
 export class RecipeService {
+
+    recipeChanged = new Subject<RecipeModel[]>();
 
     private recipes: RecipeModel[] = [
         new RecipeModel('THE BEST EASY BEEF AND BROCCOLI STIR-FRY',
@@ -33,6 +36,21 @@ export class RecipeService {
 
     getRecipe(index: number) {
         return this.recipes.slice()[index];
+    }
+
+    addRecipe(newRecipe: RecipeModel) {
+        this.recipes.push(newRecipe);
+        this.recipeChanged.next(this.recipes.slice());
+    }
+
+    updateRecipe(index:number, newRecipe: RecipeModel) {
+        this.recipes[index] = newRecipe;
+        this.recipeChanged.next(this.recipes.slice());
+    }
+
+    deleteRecipe(index: number) {
+        this.recipes.splice(index, 1);
+        this.recipeChanged.next(this.recipes.slice())
     }
 
     addIngredientsToShoppingList(ings: IngredientModel[]) {
