@@ -13,14 +13,19 @@
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown" appDropdown>
+        <ng-template [ngIf]="!authService.isAuthenticated()">
+          <li><a style="cursor: pointer;" routerLink="/sign-up">Register</a></li>
+          <li><a style="cursor: pointer;" routerLink="/sign-in">Login</a></li>
+        </ng-template>
+        <li *ngIf="authService.isAuthenticated()"><a style="cursor: pointer;" (click)="authService.logout()">Logout</a></li>
+        <li class="dropdown" appDropdown *ngIf="authService.isAuthenticated()">
           <a style="cursor: pointer;" class="dropdown-toggle" role="button">Manage <span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li>
-              <a style="cursor: pointer;">Saving Data</a>
+              <a style="cursor: pointer;" (click)="saveRecipes()">Saving Data</a>
             </li>
             <li>
-              <a style="cursor: pointer;">Fetching Data</a>
+              <a style="cursor: pointer;" (click)="fetchRecipes()">Fetching Data</a>
             </li>
           </ul>
         </li>
